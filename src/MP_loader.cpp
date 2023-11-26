@@ -5,7 +5,7 @@
 
 void SC_AddExtendedXPScripts();
 
-void AddExtendedXPScripts()
+void Addmod_ExtendedXPScripts()
 {
     SC_AddExtendedXPScripts();
 }

@@ -1,4 +1,5 @@
 #include "ExtendedXP.h"
+#include "Chat.h"
 
 void ExtendedXPPlayer::OnGiveXP(Player* player, uint32& amount, Unit* victim, uint8 /*xpSource*/)
 {
@@ -82,6 +83,10 @@ void ExtendedXPPlayer::OnAchiComplete(Player* player, AchievementEntry const* ac
 
     float xpMax = player->GetUInt32Value(PLAYER_NEXT_LEVEL_XP);
     float xpReward = xpMax * expMultiplier;
+
+    std::string msg;
+    msg = Acore::StringFormat("Earned %i Achievement points: %i experience gained", achievement->points, int(xpReward));
+    ChatHandler(player->GetSession()).SendSysMessage(msg);
 
     player->GiveXP(xpReward, nullptr);
 }

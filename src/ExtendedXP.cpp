@@ -7,41 +7,55 @@ void ExtendedXPPlayer::OnGiveXP(Player* player, uint32& amount, Unit* victim, ui
         return;
     }
 
-    if (!sConfigMgr->GetOption<bool>("ExtendedXP.RareXP.Enable", false))
+    if (!player || !victim ||
+        victim->IsPlayer() || !victim->ToCreature())
     {
         return;
     }
 
-    if (!player)
+    if (sConfigMgr->GetOption<bool>("ExtendedXP.RareXP.Enable", false))
     {
-        return;
+        auto creature = victim->ToCreature();
+        auto creatureProto = creature->GetCreatureTemplate();
+
+        if (creatureProto->rank != CREATURE_ELITE_RARE && creatureProto->rank != CREATURE_ELITE_RAREELITE)
+        {
+            return;
+        }
+
+        float rareExpMulti = sConfigMgr->GetOption<float>("ExtendedXP.RareXP.Multiplier", 3);
+        amount = amount * rareExpMulti;
     }
 
-    if (!victim)
+    if (sConfigMgr->GetOption<bool>("ExtendedXP.GroupXP.Enable", false))
     {
-        return;
+        auto group = player->GetGroup();
+        if (!group)
+        {
+            return;
+        }
+
+        uint32 playersInRange = 0;
+        for (auto it = group->GetFirstMember(); it != nullptr; it = it->next())
+        {
+            auto member = it->GetSource();
+            if (member && (!member->IsInMap(player) ||
+                !member->IsWithinDist(player, member->GetSightRange(player), false)))
+            {
+                playersInRange++;
+            }
+        }
+
+        float groupExpMulti = sConfigMgr->GetOption<float>("ExtendedXP.GroupXP.Multiplier", 0.33);
+        uint32 groupExpCap = sConfigMgr->GetOption<uint32>("ExtendedXP.GroupXP.Cap", 5);
+
+        if (playersInRange > groupExpCap)
+        {
+            playersInRange = groupExpCap;
+        }
+
+        amount = amount * (1 + (groupExpMulti * playersInRange));
     }
-
-    if (victim->IsPlayer())
-    {
-        return;
-    }
-
-    if (!victim->ToCreature())
-    {
-        return;
-    }
-
-    auto creature = victim->ToCreature();
-    auto creatureProto = creature->GetCreatureTemplate();
-
-    if (creatureProto->rank != CREATURE_ELITE_RARE && creatureProto->rank != CREATURE_ELITE_RAREELITE)
-    {
-        return;
-    }
-
-    uint32 rareExpMulti = sConfigMgr->GetOption<uint32>("ExtendedXP.RareXP.Multiplier", 3);
-    amount = amount * rareExpMulti;
 }
 
 void ExtendedXPPlayer::OnAchiComplete(Player* player, AchievementEntry const* achievement)

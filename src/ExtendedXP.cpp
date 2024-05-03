@@ -39,8 +39,13 @@ void ExtendedXPPlayer::OnGiveXP(Player* player, uint32& amount, Unit* victim, ui
         for (auto it = group->GetFirstMember(); it != nullptr; it = it->next())
         {
             auto member = it->GetSource();
-            if (member && (!member->IsInMap(player) ||
-                !member->IsWithinDist(player, member->GetSightRange(player), false)))
+            if (!member)
+            {
+                continue;
+            }
+
+            if (member->IsInMap(player) ||
+                member->IsWithinDist(player, member->GetSightRange(player), false))
             {
                 playersInRange++;
             }

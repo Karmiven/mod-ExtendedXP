@@ -44,11 +44,13 @@ void ExtendedXPPlayer::OnGiveXP(Player* player, uint32& amount, Unit* victim, ui
                 continue;
             }
 
-            if (member->IsInMap(player) ||
-                member->IsWithinDist(player, member->GetSightRange(player), false))
+            if (!member->IsInMap(player) ||
+                !member->IsWithinDist(player, member->GetSightRange(player), false))
             {
-                playersInRange++;
+                continue;
             }
+
+            playersInRange++;
         }
 
         float groupExpMulti = sConfigMgr->GetOption<float>("ExtendedXP.GroupXP.Multiplier", 0.33);

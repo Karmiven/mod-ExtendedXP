@@ -61,8 +61,57 @@ void ExtendedXPPlayer::OnGiveXP(Player* player, uint32& amount, Unit* victim, ui
             playersInRange = groupExpCap;
         }
 
-        amount = amount * (1 + (groupExpMulti * playersInRange));
+        auto bonusXP = (amount * groupExpMulti) * playersInRange;
+        AwardXP(player, victim, bonusXP);
     }
+}
+
+void ExtendedXPPlayer::AwardXP(Player* player, Unit* victim, float xp)
+{
+    if (xp < 1)
+    {
+        return;
+    }
+
+    if (!player->IsAlive())
+    {
+        return;
+    }
+
+    if (player->HasPlayerFlag(PLAYER_FLAGS_NO_XP_GAIN))
+    {
+        return;
+    }
+
+    if (victim && victim->GetTypeId() == TYPEID_UNIT && !victim->ToCreature()->hasLootRecipient())
+    {
+        return;
+    }
+
+    uint8 level = player->GetLevel();
+    if (level >= sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL))
+    {
+        return;
+    }
+
+    player->SendLogXPGain(xp, victim, 0, true);
+
+    uint32 curXP = player->GetUInt32Value(PLAYER_XP);
+    uint32 nextLvlXP = player->GetUInt32Value(PLAYER_NEXT_LEVEL_XP);
+    uint32 newXP = xp;
+
+    while (newXP >= nextLvlXP && level < sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL))
+    {
+        newXP -= nextLvlXP;
+
+        if (level < sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL))
+            player->GiveLevel(level + 1);
+
+        level = player->GetLevel();
+        nextLvlXP = player->GetUInt32Value(PLAYER_NEXT_LEVEL_XP);
+    }
+
+    player->SetUInt32Value(PLAYER_XP, newXP);
 }
 
 void ExtendedXPPlayer::OnAchiComplete(Player* player, AchievementEntry const* achievement)

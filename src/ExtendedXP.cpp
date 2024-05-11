@@ -91,7 +91,6 @@ void ExtendedXPPlayer::AwardXP(Player* player, Unit* victim, float xp)
 
     player->SendLogXPGain(xp, victim, 0, true);
 
-    uint32 curXP = player->GetUInt32Value(PLAYER_XP);
     uint32 nextLvlXP = player->GetUInt32Value(PLAYER_NEXT_LEVEL_XP);
     uint32 newXP = xp;
 

@@ -83,11 +83,6 @@ void ExtendedXPPlayer::AwardXP(Player* player, Unit* victim, float xp)
         return;
     }
 
-    if (victim && victim->GetTypeId() == TYPEID_UNIT && !victim->ToCreature()->hasLootRecipient())
-    {
-        return;
-    }
-
     uint8 level = player->GetLevel();
     if (level >= sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL))
     {

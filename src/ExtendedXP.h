@@ -13,7 +13,6 @@ public:
 private:
     void OnGiveXP(Player* /*player*/, uint32& /*amount*/, Unit* /*victim*/, uint8 /*xpSource*/) override;
     void OnAchiComplete(Player* /*player*/, AchievementEntry const* /*achievement*/) override;
-    void AwardXP(Player* /*player*/, Unit* /*victim*/, float /*xp*/, float /*bonusXP*/);
 };
 
 #endif // MODULE_EXTENDED_XP

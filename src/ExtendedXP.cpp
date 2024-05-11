@@ -62,64 +62,8 @@ void ExtendedXPPlayer::OnGiveXP(Player* player, uint32& amount, Unit* victim, ui
         }
 
         auto bonusXP = (amount * groupExpMulti) * playersInRange;
-        
-        AwardXP(player, victim, amount, bonusXP);
-
-        amount = 0;
+        player->GiveXP(bonusXP, victim);
     }
-}
-
-void ExtendedXPPlayer::AwardXP(Player* player, Unit* victim, float xp, float bonusXP)
-{
-    if (xp < 1)
-    {
-        return;
-    }
-
-    if (!player->IsAlive())
-    {
-        return;
-    }
-
-    if (player->HasPlayerFlag(PLAYER_FLAGS_NO_XP_GAIN))
-    {
-        return;
-    }
-
-    uint8 level = player->GetLevel();
-    if (level >= sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL))
-    {
-        return;
-    }
-
-    WorldPacket data(SMSG_LOG_XPGAIN, sizeof(uint64) + sizeof(uint32) + sizeof(uint8) + sizeof(uint32) + sizeof(float) + sizeof(uint8));
-
-    data << (victim->GetGUID());   // Victims guid
-    data << uint32(xp + bonusXP); // Total given experience
-    data << uint8(0); // Kill type
-
-    data << uint32(xp); // Exp without bonus
-    data << float(1); // Group rate
-
-    data << uint8(1); // Recruit a friend
-
-    player->GetSession()->SendPacket(&data);
-
-    uint32 nextLvlXP = player->GetUInt32Value(PLAYER_NEXT_LEVEL_XP);
-    uint32 newXP = xp + bonusXP;
-
-    while (newXP >= nextLvlXP && level < sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL))
-    {
-        newXP -= nextLvlXP;
-
-        if (level < sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL))
-            player->GiveLevel(level + 1);
-
-        level = player->GetLevel();
-        nextLvlXP = player->GetUInt32Value(PLAYER_NEXT_LEVEL_XP);
-    }
-
-    player->SetUInt32Value(PLAYER_XP, newXP);
 }
 
 void ExtendedXPPlayer::OnAchiComplete(Player* player, AchievementEntry const* achievement)

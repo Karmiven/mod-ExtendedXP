@@ -44,6 +44,12 @@ void ExtendedXPPlayer::OnGiveXP(Player* player, uint32& amount, Unit* victim, ui
                 continue;
             }
 
+            // Don't count self
+            if (member->GetGUID() == player->GetGUID())
+            {
+                continue;
+            }
+
             if (!member->IsInMap(player) ||
                 !member->IsWithinDist(player, member->GetSightRange(player), false))
             {

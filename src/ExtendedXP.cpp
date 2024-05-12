@@ -56,13 +56,16 @@ void ExtendedXPPlayer::OnGiveXP(Player* player, uint32& amount, Unit* victim, ui
         float groupExpMulti = sConfigMgr->GetOption<float>("ExtendedXP.GroupXP.Multiplier", 0.33);
         uint32 groupExpCap = sConfigMgr->GetOption<uint32>("ExtendedXP.GroupXP.Cap", 5);
 
-        if (playersInRange > groupExpCap)
+        if (playersInRange)
         {
-            playersInRange = groupExpCap;
-        }
+            if (playersInRange > groupExpCap)
+            {
+                playersInRange = groupExpCap;
+            }
 
-        auto bonusXP = (amount * groupExpMulti) * playersInRange;
-        player->GiveXP(bonusXP, victim);
+            auto bonusXP = (amount * groupExpMulti) * playersInRange;
+            player->GiveXP(bonusXP, victim);
+        }
     }
 }
 

@@ -30,9 +30,37 @@ ExtendedXP.RareXP.Enable = 0
 #        Description: Sets the rare creature exp reward multiplier.
 #        Note: This multiplier is applied AFTER the server creature kill multiplier.
 #        Default:     3
+#		 Type:        float
 #
 
 ExtendedXP.RareXP.Multiplier = 3
+
+#
+#    ExtendedXP.GroupXP.Enable
+#        Description: Enables the increased group XP reward.
+#        Default:     0 - Disabled
+#                     1 - Enabled
+#
+
+ExtendedXP.GroupXP.Enable = 0
+
+#
+#    ExtendedXP.GroupXP.Multiplier
+#        Description: Multiplies the rewarded XP based on the amount of players in range in group.
+#        Note: This multiplier is applied AFTER the server creature kill multiplier.
+#        Default:     0.33
+#		 Type:        float
+#
+
+ExtendedXP.GroupXP.Multiplier = 0.33
+
+#
+#    ExtendedXP.GroupXP.Cap
+#        Description: The maximum amount of times the above config can be multiplied (5 players).
+#        Default:     5
+#
+
+ExtendedXP.GroupXP.Cap = 5
 
 #
 #    ExtendedXP.AchievementXP.Enable

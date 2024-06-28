@@ -47,6 +47,9 @@ void ExtendedXPPlayer::OnGiveXP(Player* player, uint32& amount, Unit* victim, ui
 
 void ExtendedXPPlayer::OnAchiComplete(Player* player, AchievementEntry const* achievement)
 {
+    // TODO: Hit level 50, and got a free level to 51. Maybe related to achievement triggering?
+    //       Possibly gaining level from achieve, then that granting an achieve
+
     if (!sConfigMgr->GetOption<bool>("ExtendedXP.Enable", false))
     {
         return;
@@ -70,6 +73,12 @@ void ExtendedXPPlayer::OnAchiComplete(Player* player, AchievementEntry const* ac
     auto pLevel = player->GetLevel();
     if (pLevel >= sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL))
     {
+        // TODO: If gold enabled
+        int iGoldReward = achievement->points; // * config modifier
+        player->ModifyMoney(iGoldReward * 10000);
+        std::string msg;
+        msg = Acore::StringFormat("Earned %i Achievement points: %i gold gained", achievement->points, iGoldReward);
+        ChatHandler(player->GetSession()).SendSysMessage(msg);
         return;
     }
 

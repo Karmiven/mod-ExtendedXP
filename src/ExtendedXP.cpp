@@ -108,7 +108,7 @@ void ExtendedXPPlayer::OnAchiComplete(Player* player, AchievementEntry const* ac
         int iGoldReward = achievement->points; // * config modifier
         player->ModifyMoney(iGoldReward * 10000);
         std::string msg;
-        msg = Acore::StringFormat("Earned %i Achievement points: %i gold gained", achievement->points, iGoldReward);
+        msg = Acore::StringFormat("Earned {} Achievement points: {} gold gained", achievement->points, iGoldReward);
         ChatHandler(player->GetSession()).SendSysMessage(msg);
         return;
     }
@@ -125,7 +125,7 @@ void ExtendedXPPlayer::OnAchiComplete(Player* player, AchievementEntry const* ac
     float xpReward = xpMax * expMultiplier;
 
     std::string msg;
-    msg = Acore::StringFormat("Earned %i Achievement points: %i experience gained", achievement->points, int(xpReward));
+    msg = Acore::StringFormat("Earned {} Achievement points: {} experience gained", achievement->points, int(xpReward));
     ChatHandler(player->GetSession()).SendSysMessage(msg);
 
     player->GiveXP(xpReward, nullptr);

@@ -1,7 +1,7 @@
 #include "ExtendedXP.h"
 #include "Chat.h"
 
-void ExtendedXPPlayer::OnGiveXP(Player* player, uint32& amount, Unit* victim, uint8 /*xpSource*/)
+void ExtendedXPPlayer::OnPlayerGiveXP(Player* player, uint32& amount, Unit* victim, uint8 /*xpSource*/)
 {
     if (!sConfigMgr->GetOption<bool>("ExtendedXP.Enable", false))
     {
@@ -76,7 +76,7 @@ void ExtendedXPPlayer::OnGiveXP(Player* player, uint32& amount, Unit* victim, ui
     }
 }
 
-void ExtendedXPPlayer::OnAchiComplete(Player* player, AchievementEntry const* achievement)
+void ExtendedXPPlayer::OnPlayerAchievementComplete(Player* player, AchievementEntry const* achievement)
 {
     // TODO: Hit level 50, and got a free level to 51. Maybe related to achievement triggering?
     //       Possibly gaining level from achieve, then that granting an achieve
